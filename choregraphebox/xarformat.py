@@ -38,10 +38,7 @@ class Box:
 class XARArchive:
     def __init__(self, file, name, prefix = ""):
         self.file = file
-        if not name:
-            self.name = name
-        else:
-            self.name = os.path.basename(os.path.dirname(file))
+        self.name = name if name else os.path.basename(os.path.dirname(file))
         self.prefix = prefix
         
     def get_children(self):
@@ -64,10 +61,7 @@ class XARArchive:
 class XARFolder:
     def __init__(self, dir, name = None):
         self.dir = dir
-        if not name:
-            self.name = name
-        else:
-            self.name = os.path.basename(dir)
+        self.name = name if name else os.path.basename(dir)
         xalinfo = ET.parse(os.path.join(self.dir, "xalinfo"))
         self.box = None
         self.children = []
