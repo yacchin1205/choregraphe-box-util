@@ -36,7 +36,7 @@ class Box:
         return [Parameter(node) for node in self.node.findall(self.prefix + "Parameter")]
 
 class XARArchive:
-    def __init__(self, file, name, prefix = ""):
+    def __init__(self, file, name = None, prefix = ""):
         self.file = file
         self.name = name if name else os.path.basename(os.path.dirname(file))
         self.prefix = prefix
@@ -116,8 +116,10 @@ def load(f):
     """
     if os.path.isdir(f):
         return XARFolder(f)
+    elif os.path.isfile(f):
+        return XARArchive(f, prefix = "{%s}" % NAMESPACE_XAR_PROJECT)
     else:
-        raise IOError("Loading from the file '%s'  is not supported" % f)
+        raise IOError("Unknown file path '%s'" % f)
 
 def verify_xar_version(file, elem):
     if elem.attrib["xar_version"] != "3":
