@@ -21,8 +21,8 @@ class Parameter(Port):
         self.content_type = node.attrib["content_type"]
 
 class Box:
-    def __init__(self, name, node, prefix = ""):
-        self.name = name
+    def __init__(self, node, name = None, prefix = ""):
+        self.name = name if name else node.attrib["name"]
         self.node = node
         self.prefix = prefix
         
@@ -34,23 +34,41 @@ class Box:
         
     def get_parameters(self):
         return [Parameter(node) for node in self.node.findall(self.prefix + "Parameter")]
+        
+    def get_all_boxes(self):
+        return [Box(node, prefix = self.prefix) for node in self.node.findall(".//%sBox" % self.prefix)]
+        
+    def copy_from(self, source):
+        for attrname in set(source.node.keys()) - set(["name", "id", "x", "y"]):
+            self.node.set(attrname, source.node.attrib[attrname])
+        for child in list(self.node.getchildren()):
+            self.node.remove(child)
+        for source_child in source.node.getchildren():
+            self.node.append(source_child)
+        
 
 class XARArchive:
     def __init__(self, file, name = None, prefix = ""):
         self.file = file
         self.name = name if name else os.path.basename(os.path.dirname(file))
         self.prefix = prefix
+        self.xarxml = None
+        self.box = None
         
     def get_children(self):
         return []
         
     def get_box(self):
+        if self.box:
+            return self.box
         xarxml = ET.parse(self.file)
         verify_xar_version(self.file, xarxml.getroot())
         boxes = xarxml.findall(self.prefix + "Box")
         if len(boxes) != 1:
             raise IOError("Unexpected xar file '%s', Only one Box element is allowed (%d Box elements found)" % (self.file, len(boxes)))
-        return Box(self.name, boxes[0], self.prefix)
+        self.box = Box(boxes[0], self.name, self.prefix)
+        self.xarxml = xarxml
+        return self.box
 
     def findall(self, name):
         return []
