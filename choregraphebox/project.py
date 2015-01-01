@@ -1,14 +1,13 @@
 ﻿# -*- coding: utf-8 -*-
 
 import os.path
-import xml.etree.ElementTree as ET
+import lxml.etree as ET
 import xarformat
 
 """
 Managing Choregraphe projects
 """
 
-ET.register_namespace("", 'http://www.aldebaran-robotics.com/schema/choregraphe/project.xsd')
 
 class Project:
     def __init__(self, file):
@@ -33,8 +32,7 @@ class Project:
                     
     def save(self):
         for behavior in self.behaviors:
-            #behavior.xarxml.write(behavior.file, encoding="utf-8", xml_declaration=True, method="xml")
-            raise NotImplementedError()
+            behavior.xarxml.write(behavior.file, encoding="utf-8", xml_declaration=True, method="xml")
         
     def _find_box(self, name):
         for boxlib in self.boxlibs:

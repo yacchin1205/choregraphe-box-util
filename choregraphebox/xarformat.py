@@ -1,7 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 
 import os.path
-import xml.etree.ElementTree as ET
+import lxml.etree as ET
 import urllib
 
 """
@@ -69,7 +69,7 @@ class XARArchive:
     def get_box(self):
         if self.box:
             return self.box
-        xarxml = ET.parse(self.file)
+        xarxml = ET.parse(self.file, parser=ET.XMLParser(strip_cdata=False))
         verify_xar_version(self.file, xarxml.getroot())
         boxes = xarxml.findall(self.prefix + "Box")
         if len(boxes) != 1:
