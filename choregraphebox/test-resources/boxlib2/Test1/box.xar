@@ -17,7 +17,7 @@
         pass
 
     def onInput_onStart(self):
-        self.logger.info("Hoge v1")
+        self.logger.info("Hoge v2")
         self.onStopped() #activate the output of the box
 
     def onInput_onStop(self):
