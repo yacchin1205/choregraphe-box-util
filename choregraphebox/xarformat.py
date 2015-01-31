@@ -39,6 +39,7 @@ class Box:
         self.node = node
         self.prefix = prefix
         self.tooltip = node.attrib["tooltip"]
+        self.has_plugin = "plugin" in node.attrib
 
     def get_inputs(self):
         return [Port(node)
