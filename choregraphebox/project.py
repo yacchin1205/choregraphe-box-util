@@ -37,7 +37,8 @@ class Project:
                 if not box.has_plugin:
                     try:
                         updated = self._find_by_box(box, strict)
-                        logger.info("Found in box library: %s->%s" % (box.name, updated.name))
+                        logger.info("Found in box library: %s->%s"
+                                    % (box.name, updated.name))
                         box.copy_from(updated)
                     except boxlib.NotFoundError:
                         logger.info("Not found in box library: %s" % box.name)
