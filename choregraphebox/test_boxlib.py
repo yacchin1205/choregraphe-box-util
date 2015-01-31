@@ -1,5 +1,6 @@
 import unittest
 import boxlib
+import xarformat
 import os
 
 
@@ -53,6 +54,21 @@ class TestBoxLib(unittest.TestCase):
         self.assertTrue("/TestFolder2/TestDialog2B" in warn_paths)
         self.assertTrue("/TestPythonA" in warn_paths)
 
+    def test_find_by_box(self):
+        lib = boxlib.load(os.path.join(self.resources, "boxlib2"))
+        behavior = xarformat.load(os.path.join(self.resources, "project1",
+                                               "behavior_1", "behavior.xar"))
+        targets = [box for box in behavior.get_box().get_all_boxes()
+                   if box.name == "Test1"]
+        self.assertEquals(len(targets), 1)
+        basebox = lib.find_by_box(targets[0], strict=False)
+        self.assertEquals(basebox.name, "Test1")
+        try:
+            # "Strict" search must be failure
+            # because Test1 box has no "@source" tags in the tooltip
+            lib.find_by_box(targets[0])
+        except boxlib.NotFoundError:
+            pass
 
 if __name__ == '__main__':
     unittest.main()
