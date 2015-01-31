@@ -110,11 +110,13 @@ class TestXARformat(unittest.TestCase):
         boxlib = xarformat.load(os.path.join(self.resources, "boxlib2"))
         items = sorted(boxlib.get_children(), key=lambda item: item.name)
         basebox = items[1].get_box()
+        self.assertTrue("@version 2" in basebox.tooltip)
         self.assertEquals(basebox.name, "Test2")
         behavior = xarformat.load(os.path.join(self.resources, "project1",
                                                "behavior_1", "behavior.xar"))
         target = [box for box in behavior.get_box().get_all_boxes()
                   if box.name == "Test2"][0]
+        self.assertTrue("@version 1" in target.tooltip)
         params = target.get_parameters()
         self.assertEquals(params[0].value, "1")
         self.assertEquals(params[1].value, "1")
@@ -127,6 +129,7 @@ class TestXARformat(unittest.TestCase):
         behavior = xarformat.load(StringIO.StringIO(updatexml.getvalue()))
         target = [box for box in behavior.get_box().get_all_boxes()
                   if box.name == "Test2"][0]
+        self.assertTrue("@version 2" in target.tooltip)
         params = target.get_parameters()
         self.assertEquals(params[0].value, "1")
         self.assertEquals(params[1].value, "1")
