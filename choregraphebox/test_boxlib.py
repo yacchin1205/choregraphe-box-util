@@ -2,6 +2,7 @@ import unittest
 import boxlib
 import xarformat
 import os
+import logging
 
 
 class TestBoxLib(unittest.TestCase):
@@ -94,4 +95,5 @@ class TestBoxLib(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.ERROR)
     unittest.main()
