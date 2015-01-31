@@ -5,6 +5,7 @@ import logging
 import re
 import sys
 import xarformat
+import argparse
 
 logger = logging.getLogger('choregraphebox')
 
@@ -135,9 +136,17 @@ def load(path):
 
 
 def verify():
-    logging.basicConfig(level=logging.ERROR)
+    parser = argparse.ArgumentParser(description="Verify boxes "
+                                     "in box libraries")
+    parser.add_argument('boxlibs', metavar='BOXLIB_PATH', type=str, nargs='+',
+                        help='target box libraries')
+    parser.add_argument('--verbose', '-v', dest='verbose', action='store_true',
+                        help='verbose output')
+
+    args = parser.parse_args()
+    logging.basicConfig(level=logging.INFO if args.verbose else logging.ERROR)
     warns = 0
-    for path in sys.argv[1:]:
+    for path in args.boxlibs:
         for warn in load(path).verify_tags():
             print("%s: %s" % (warn.path, warn.message))
             warns += 1
