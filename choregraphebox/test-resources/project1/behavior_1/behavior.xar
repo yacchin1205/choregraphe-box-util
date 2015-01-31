@@ -204,6 +204,28 @@
                             <Parameter name="param2" inherits_from_parent="0" content_type="0" value="1" default_value="1" tooltip="" id="10" />
                             <Parameter name="param3" inherits_from_parent="0" content_type="3" value="" default_value="" custom_choice="0" tooltip="" id="11" />
                         </Box>
+                        <Box name="Test3" id="5" localization="8" tooltip="Send the text you entered when the input is stimulated.&#x0A;&#x0A;@source https://github.com/yacchin1205/choregraphe-box-util&#x0A;@version 1" plugin="textedit_plugin" x="469" y="521">
+                            <bitmap>media/images/box/interaction/vocabulary.png</bitmap>
+                            <script language="4">
+                                <content>
+                                    <![CDATA[# /!\ Generated content. Do not edit!
+class MyClass(GeneratedClass):
+	def __init__(self):
+		GeneratedClass.__init__(self)
+
+	def onInput_onStart(self):
+		self.onStopped("TestValue")]]>
+</content>
+                            </script>
+                            <pluginContent>
+                                <text>
+                                    <![CDATA[TestValue]]>
+</text>
+                            </pluginContent>
+                            <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />
+                            <Input name="onStart" type="1" type_size="1" nature="1" inner="0" tooltip="To send the text on the output." id="2" />
+                            <Output name="onStopped" type="3" type_size="1" nature="2" inner="0" tooltip="The text you entered." id="3" />
+                        </Box>
                         <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
                         <Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="6" />
                         <Link inputowner="6" indexofinput="2" outputowner="0" indexofoutput="2" />
@@ -213,6 +235,8 @@
                         <Link inputowner="4" indexofinput="3" outputowner="6" indexofoutput="4" />
                         <Link inputowner="4" indexofinput="2" outputowner="0" indexofoutput="2" />
                         <Link inputowner="2" indexofinput="2" outputowner="4" indexofoutput="8" />
+                        <Link inputowner="5" indexofinput="2" outputowner="4" indexofoutput="7" />
+                        <Link inputowner="2" indexofinput="2" outputowner="5" indexofoutput="3" />
                     </Diagram>
                 </BehaviorKeyframe>
             </BehaviorLayer>

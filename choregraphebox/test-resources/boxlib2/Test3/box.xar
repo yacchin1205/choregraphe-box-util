@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ChoregrapheBox xar_version="3">
-    <Box name="root" id="-1" tooltip="Send the text you entered when the input is stimulated." plugin="textedit_plugin" x="145" y="339">
+    <Box name="root" id="-1" tooltip="Test3&#x0A;&#x0A;@source https://github.com/yacchin1205/choregraphe-box-util&#x0A;@version 2" plugin="textedit_plugin" x="145" y="339">
         <bitmap>media/images/box/interaction/vocabulary.png</bitmap>
         <script language="4">
             <content>
