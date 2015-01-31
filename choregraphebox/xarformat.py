@@ -11,15 +11,22 @@ Loading Choregraphe behavior/box archive files
 NS_PROJECT = 'http://www.aldebaran-robotics.com/schema/choregraphe/project.xsd'
 
 
-class Port:
+class BasePort:
     def __init__(self, node):
         self.id = node.attrib["id"]
         self.name = node.attrib["name"]
 
 
-class Parameter(Port):
+class Port(BasePort):
     def __init__(self, node):
-        Port.__init__(self, node)
+        BasePort.__init__(self, node)
+        assert int(node.attrib["type_size"]) == 1
+        self.type = int(node.attrib["type"])
+
+
+class Parameter(BasePort):
+    def __init__(self, node):
+        BasePort.__init__(self, node)
         self.content_type = node.attrib["content_type"]
 
 
