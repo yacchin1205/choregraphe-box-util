@@ -3,6 +3,8 @@
 import os.path
 import lxml.etree as ET
 import urllib
+import copy
+import re
 
 """
 Loading Choregraphe behavior/box archive files
@@ -28,6 +30,7 @@ class Parameter(BasePort):
     def __init__(self, node):
         BasePort.__init__(self, node)
         self.content_type = node.attrib["content_type"]
+        self.value = node.attrib["value"]
 
 
 class Box:
@@ -57,10 +60,19 @@ class Box:
         preserved_keys = set(["name", "id", "x", "y"])
         for attrname in set(source.node.keys()) - preserved_keys:
             self.node.set(attrname, source.node.attrib[attrname])
+        parampat = re.compile(r'(\{.+\})?Parameter')
+        old_params = {}
         for child in list(self.node.getchildren()):
             self.node.remove(child)
+            if parampat.match(child.tag) and "id" in child.attrib:
+                old_params[child.attrib["id"]] = child
         for source_child in source.node.getchildren():
-            self.node.append(source_child)
+            child = copy.deepcopy(source_child)
+            if parampat.match(child.tag) and "id" in child.attrib:
+                new_id = child.attrib["id"]
+                if new_id in old_params:
+                    child.attrib["value"] = old_params[new_id].attrib["value"]
+            self.node.append(child)
 
 
 class XARArchive:
@@ -78,12 +90,11 @@ class XARArchive:
         if self.box:
             return self.box
         xarxml = ET.parse(self.file, parser=ET.XMLParser(strip_cdata=False))
-        verify_xar_version(self.file, xarxml.getroot())
+        verify_xar_version(xarxml.getroot())
         boxes = xarxml.findall(self.prefix + "Box")
         if len(boxes) != 1:
-            raise IOError("Unexpected xar file '%s', "
-                          "Only one Box element is allowed"
-                          " (%d Box elements found)" % (self.file, len(boxes)))
+            raise IOError("Only one Box element is allowed"
+                          " (%d Box elements found)" % len(boxes))
         self.box = Box(boxes[0], self.name, self.prefix)
         self.xarxml = xarxml
         return self.box
@@ -153,15 +164,18 @@ def load(f):
     """
     Loading archive from file or directory
     """
-    if os.path.isdir(f):
-        return XARFolder(f)
-    elif os.path.isfile(f):
-        return XARArchive(f, prefix="{%s}" % NS_PROJECT)
+    if isinstance(f, basestring):
+        if os.path.isdir(f):
+            return XARFolder(f)
+        elif os.path.isfile(f):
+            return XARArchive(f, prefix="{%s}" % NS_PROJECT)
+        else:
+            raise IOError("Unknown file path '%s'" % f)
     else:
-        raise IOError("Unknown file path '%s'" % f)
+        return XARArchive(f, name="behavior.xar", prefix="{%s}" % NS_PROJECT)
 
 
-def verify_xar_version(file, elem):
+def verify_xar_version(elem):
     if elem.attrib["xar_version"] != "3":
-        raise IOError("Unknown xar version '%s' is detected in '%s'"
-                      % (elem.attrib["xar_version"], file))
+        raise IOError("Unknown xar version '%s' is detected"
+                      % elem.attrib["xar_version"])

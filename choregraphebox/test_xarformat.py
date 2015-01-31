@@ -1,6 +1,7 @@
 import unittest
 import xarformat
 import os
+import StringIO
 
 
 class TestXARformat(unittest.TestCase):
@@ -104,6 +105,32 @@ class TestXARformat(unittest.TestCase):
         self.assertEquals(params[0].name, "param1")
         self.assertEquals(params[1].name, "param2")
         self.assertEquals(params[2].name, "param3")
+
+    def test_copy_box(self):
+        boxlib = xarformat.load(os.path.join(self.resources, "boxlib2"))
+        items = sorted(boxlib.get_children(), key=lambda item: item.name)
+        basebox = items[1].get_box()
+        self.assertEquals(basebox.name, "Test2")
+        behavior = xarformat.load(os.path.join(self.resources, "project1",
+                                               "behavior_1", "behavior.xar"))
+        target = [box for box in behavior.get_box().get_all_boxes()
+                  if box.name == "Test2"][0]
+        params = target.get_parameters()
+        self.assertEquals(params[0].value, "1")
+        self.assertEquals(params[1].value, "1")
+        self.assertEquals(params[2].value, "")
+
+        target.copy_from(basebox)
+        updatexml = StringIO.StringIO()
+        behavior.xarxml.write(updatexml, encoding="utf-8",
+                              xml_declaration=True, method="xml")
+        behavior = xarformat.load(StringIO.StringIO(updatexml.getvalue()))
+        target = [box for box in behavior.get_box().get_all_boxes()
+                  if box.name == "Test2"][0]
+        params = target.get_parameters()
+        self.assertEquals(params[0].value, "1")
+        self.assertEquals(params[1].value, "1")
+        self.assertEquals(params[2].value, "")
 
 
 if __name__ == '__main__':
