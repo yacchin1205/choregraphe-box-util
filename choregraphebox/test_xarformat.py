@@ -41,7 +41,9 @@ class TestXARformat(unittest.TestCase):
         self.assertEquals(len(children2), 2)
         self.assertEquals(children2[0].name, "TestPython1-2A")
         self.assertIsNotNone(children2[0].get_box())
-        self.assertEquals(children2[0].get_box().tooltip, "Description1-2A\n\n@source https://github.com/yacchin1205/choregraphe-box-util")
+        self.assertEquals(children2[0].get_box().tooltip, "Description1-2A\n\n"
+                          "@source https://github.com/yacchin1205/"
+                          "choregraphe-box-util")
         self.assertEquals(children2[1].name, "TestTimeline1-2B")
         self.assertIsNotNone(children2[1].get_box())
         self.assertEquals(children2[1].get_box().tooltip, "")
