@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ChoregrapheBox xar_version="3">
-    <Box name="root" id="3" localization="8" tooltip="" x="681" y="308">
+    <Box name="root" id="3" localization="8" tooltip="Description1-1A" x="681" y="308">
         <bitmap>media/images/box/box-python-script.png</bitmap>
         <script language="4">
             <content>
