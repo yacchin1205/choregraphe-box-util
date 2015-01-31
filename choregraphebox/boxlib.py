@@ -3,6 +3,7 @@
 import os.path
 import logging
 import re
+import sys
 import xarformat
 
 logger = logging.getLogger('choregraphebox')
@@ -71,4 +72,18 @@ def load(path):
     if os.path.isdir(path):
         return BoxLib(xarformat.load(path))
     else:
-        raise IOError("Not a directory '%s'" % f)
+        raise IOError("Not a directory '%s'" % path)
+
+
+def verify():
+    logging.basicConfig(level=logging.ERROR)
+    warns = 0
+    for path in sys.argv[1:]:
+        for warn in load(path).verify_tags():
+            print("%s: %s" % (warn.path, warn.message))
+            warns += 1
+    print("%d warnings" % warns)
+    sys.exit(0 if warns == 0 else 1)
+
+if __name__ == '__main__':
+    verify()

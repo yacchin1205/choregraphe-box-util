@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+from setuptools import setup
 
 setup(name='ChoregrapheBoxUtils',
       version='0.1',
@@ -9,4 +9,6 @@ setup(name='ChoregrapheBoxUtils',
       author_email='yazawa@yzwlab.net',
       url='https://github.com/yacchin1205/choregraphe-box-util',
       packages=['choregraphebox'],
+      entry_points={'console_scripts':
+                    ['verify-boxlib=choregraphebox.boxlib:verify'], },
       )
