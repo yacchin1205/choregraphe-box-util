@@ -89,6 +89,8 @@ class BoxLib:
         for (queryp, boxp) in zip(queryports, boxports):
             logger.debug("_match_port: queryp.name=%s, boxp.name=%s"
                          % (queryp.name, boxp.name))
+            if queryp.name != boxp.name:
+                return False
             if queryp.id != boxp.id:
                 return False
             if queryp.type != boxp.type:
@@ -101,6 +103,8 @@ class BoxLib:
         for (queryp, boxp) in zip(queryparams, boxparams):
             logger.debug("_match_param: queryp.name=%s, boxp.name=%s"
                          % (queryp.name, boxp.name))
+            if queryp.name != boxp.name:
+                return False
             if queryp.id != boxp.id:
                 return False
             if queryp.content_type != boxp.content_type:
