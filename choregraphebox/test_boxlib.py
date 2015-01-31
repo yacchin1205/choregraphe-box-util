@@ -86,6 +86,14 @@ class TestBoxLib(unittest.TestCase):
         self.assertEquals(basebox.name, "Test2")
 
         targets = [box for box in behavior.get_box().get_all_boxes()
+                   if box.name == "Test2 (1)"]
+        self.assertEquals(len(targets), 1)
+        basebox = lib.find_by_box(targets[0], strict=False)
+        self.assertEquals(basebox.name, "Test2")
+        basebox = lib.find_by_box(targets[0])
+        self.assertEquals(basebox.name, "Test2")
+
+        targets = [box for box in behavior.get_box().get_all_boxes()
                    if box.name == "Test3"]
         self.assertEquals(len(targets), 1)
         basebox = lib.find_by_box(targets[0], strict=False)

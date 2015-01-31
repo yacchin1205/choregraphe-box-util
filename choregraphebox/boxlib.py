@@ -74,7 +74,11 @@ class BoxLib:
         logger.debug("_match_box: query.name=%s, box.name=%s"
                      % (query.name, box.name))
         if query.name != box.name:
-            return False
+            namem = re.match(r'(.+)\s*\([0-9+]\)', query.name)
+            if not namem:
+                return False
+            if namem.group(1).strip() != box.name:
+                return False
         if not self._match_ports(query.get_inputs(), box.get_inputs()):
             return False
         if not self._match_ports(query.get_outputs(), box.get_outputs()):
