@@ -3,10 +3,15 @@
 import os.path
 import lxml.etree as ET
 import xarformat
+import boxlib
+import argparse
+import logging
 
 """
 Managing Choregraphe projects
 """
+
+logger = logging.getLogger("choregraphebox")
 
 
 class Project:
@@ -26,21 +31,60 @@ class Project:
     def add_boxlib(self, boxlib):
         self.boxlibs.append(boxlib)
 
-    def replace(self):
+    def replace(self, strict=True):
         for behavior in self.behaviors:
             for box in behavior.get_box().get_all_boxes():
-                base = self._find_box(box.name)
-                if base:
-                    box.copy_from(base.get_box())
+                if not box.has_plugin:
+                    try:
+                        updated = self._find_by_box(box, strict)
+                        logger.info("Found in box library: %s" % updated.name)
+                        box.copy_from(updated)
+                    except boxlib.NotFoundError:
+                        pass
 
     def save(self):
         for behavior in self.behaviors:
             behavior.xarxml.write(behavior.file, encoding="utf-8",
                                   xml_declaration=True, method="xml")
 
-    def _find_box(self, name):
-        for boxlib in self.boxlibs:
-            box = boxlib.find(name)
-            if box:
-                return box
-        return None
+    def _find_by_box(self, box, strict):
+        for lib in self.boxlibs:
+            try:
+                return lib.find_by_box(box, strict)
+            except boxlib.NotFoundError:
+                pass
+        raise boxlib.NotFoundError(box.name)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Replace boxes "
+                                     "in Choregraphe project")
+    parser.add_argument('projects', metavar='PML_PATH', type=str, nargs='+',
+                        help='target projects')
+    parser.add_argument('--lib', '-l', dest='lib', metavar='BOXLIB_PATHS',
+                        type=str, required=True, help="box libraries"
+                        "(comma separated)")
+    parser.add_argument('--verbose', '-v', dest='verbose', action='store_true',
+                        help='verbose output')
+    parser.add_argument('--dry-run', dest='dryrun', action='store_true',
+                        help='without save')
+    parser.add_argument('--strict', dest='strict', action='store_true',
+                        help='strict search')
+
+    args = parser.parse_args()
+    logging.basicConfig(level=logging.INFO if args.verbose else logging.ERROR)
+
+    for project in args.projects:
+        logger.info("Target: %s" % project)
+        proj = Project(project)
+        for lib in args.lib.split(":"):
+            logger.info("Load box library: %s" % lib)
+            proj.add_boxlib(boxlib.load(lib))
+        logger.info("Replacing...")
+        proj.replace(strict=args.strict)
+        if not args.dryrun:
+            logger.info("Saving...")
+            proj.save()
+
+if __name__ == "__main__":
+    main()
