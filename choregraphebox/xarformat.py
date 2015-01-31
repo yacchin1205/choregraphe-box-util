@@ -28,6 +28,7 @@ class Box:
         self.name = name if name else node.attrib["name"]
         self.node = node
         self.prefix = prefix
+        self.tooltip = node.attrib["tooltip"]
 
     def get_inputs(self):
         return [Port(node)

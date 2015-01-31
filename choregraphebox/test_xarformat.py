@@ -27,27 +27,33 @@ class TestXARformat(unittest.TestCase):
         self.assertIsNone(children1[1].get_box())
         self.assertEquals(children1[2].name, "TestTimeline1A")
         self.assertIsNotNone(children1[2].get_box())
+        self.assertEquals(children1[2].get_box().tooltip, "")
 
         children2 = sorted(children1[0].get_children(),
                            key=lambda item: item.name)
         self.assertEquals(len(children2), 1)
         self.assertEquals(children2[0].name, "TestPython1-1A")
         self.assertIsNotNone(children2[0].get_box())
+        self.assertEquals(children2[0].get_box().tooltip, "Description1-1A")
 
         children2 = sorted(children1[1].get_children(),
                            key=lambda item: item.name)
         self.assertEquals(len(children2), 2)
         self.assertEquals(children2[0].name, "TestPython1-2A")
         self.assertIsNotNone(children2[0].get_box())
+        self.assertEquals(children2[0].get_box().tooltip, "Description1-2A\n\n@source https://github.com/yacchin1205/choregraphe-box-util")
         self.assertEquals(children2[1].name, "TestTimeline1-2B")
         self.assertIsNotNone(children2[1].get_box())
+        self.assertEquals(children2[1].get_box().tooltip, "")
 
         children1 = sorted(items[1].get_children(), key=lambda item: item.name)
         self.assertEquals(len(children1), 2)
         self.assertEquals(children1[0].name, "TestDiagram2A")
         self.assertIsNotNone(children1[0].get_box())
+        self.assertEquals(children1[0].get_box().tooltip, "")
         self.assertEquals(children1[1].name, "TestDialog2B")
         self.assertIsNotNone(children1[1].get_box())
+        self.assertEquals(children1[1].get_box().tooltip, "")
 
         self.assertEquals(len(items[2].get_children()), 0)
 
