@@ -165,6 +165,31 @@ class TestXARformat(unittest.TestCase):
         self.assertEquals(params[1].value, "1")
         self.assertEquals(params[2].value, "")
 
+        basebox = items[3].get_box()
+        self.assertTrue("@version 2" in basebox.tooltip)
+        self.assertEquals(basebox.name, "Test4")
+
+        behavior = xarformat.load(os.path.join(self.resources, "project2",
+                                               "behavior_1", "behavior.xar"))
+        target = [box for box in behavior.get_box().get_all_boxes()
+                  if box.name == "Test4"][0]
+        self.assertTrue("@version 1" in target.tooltip)
+        children = [box for box in target.get_all_boxes()
+                    if box.name == "Test1"]
+        self.assertTrue("version 2" in children[0].tooltip)
+
+        target.copy_from(basebox)
+        updatexml = StringIO.StringIO()
+        behavior.xarxml.write(updatexml, encoding="utf-8",
+                              xml_declaration=True, method="xml")
+        behavior = xarformat.load(StringIO.StringIO(updatexml.getvalue()))
+        target = [box for box in behavior.get_box().get_all_boxes()
+                  if box.name == "Test4"][0]
+        self.assertTrue("@version 2" in target.tooltip)
+        children = [box for box in target.get_all_boxes()
+                    if box.name == "Test1"]
+        self.assertTrue("version 3" in children[0].tooltip)
+
 
 if __name__ == '__main__':
     unittest.main()
