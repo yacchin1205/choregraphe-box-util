@@ -11,6 +11,6 @@ setup(name='ChoregrapheBoxUtils',
       packages=['choregraphebox'],
       install_requires=["lxml"],
       entry_points={'console_scripts':
-                    ['verify-boxlib=choregraphebox.boxlib:verify',
-                     'replace-project=choregraphebox.project:main']},
+                    ['verify-box-tags=choregraphebox.boxlib:verify',
+                     'replace-boxes=choregraphebox.project:main']},
       )

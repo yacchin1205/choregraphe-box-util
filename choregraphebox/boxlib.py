@@ -140,7 +140,7 @@ def load(path):
 
 
 def verify():
-    parser = argparse.ArgumentParser(description="Verify boxes "
+    parser = argparse.ArgumentParser(description="Verify tags of boxes "
                                      "in box libraries")
     parser.add_argument('boxlibs', metavar='BOXLIB_PATH', type=str, nargs='+',
                         help='target box libraries')
