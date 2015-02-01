@@ -15,7 +15,7 @@
             <BehaviorLayer name="behavior_layer1">
                 <BehaviorKeyframe name="keyframe1" index="1">
                     <Diagram>
-                        <Box name="Test4" id="1" localization="8" tooltip="@source https://github.com/yacchin1205/choregraphe-box-util&#x0A;@version 2" x="627" y="144">
+                        <Box name="Test4" id="1" localization="8" tooltip="@source https://github.com/yacchin1205/choregraphe-box-util&#x0A;@version 1" x="627" y="144">
                             <bitmap>media/images/box/box-diagram.png</bitmap>
                             <script language="4">
                                 <content>
