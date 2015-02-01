@@ -69,8 +69,8 @@ def main():
                         help='verbose output')
     parser.add_argument('--dry-run', dest='dryrun', action='store_true',
                         help='without save')
-    parser.add_argument('--strict', dest='strict', action='store_true',
-                        help='strict search')
+    parser.add_argument('--ignore-tags', dest='ignoretags',
+                        action='store_true', help='disable strict search')
 
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO if args.verbose else logging.ERROR)
@@ -82,7 +82,7 @@ def main():
             logger.info("Load box library: %s" % lib)
             proj.add_boxlib(boxlib.load(lib))
         logger.info("Replacing...")
-        proj.replace(strict=args.strict)
+        proj.replace(strict=not args.ignoretags)
         if not args.dryrun:
             logger.info("Saving...")
             proj.save()
