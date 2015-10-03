@@ -32,6 +32,7 @@ class Project:
         self.boxlibs.append(boxlib)
 
     def replace(self, strict=True):
+        matched = 0
         for behavior in self.behaviors:
             for box in behavior.get_box().get_all_boxes():
                 if not box.has_plugin:
@@ -40,8 +41,10 @@ class Project:
                         logger.info("Found in box library: %s->%s"
                                     % (box.name, updated.name))
                         box.copy_from(updated)
+                        matched += 1
                     except boxlib.NotFoundError:
                         logger.info("Not found in box library: %s" % box.name)
+        return matched
 
     def save(self):
         for behavior in self.behaviors:
@@ -67,6 +70,8 @@ def main():
                         "(comma separated)")
     parser.add_argument('--verbose', '-v', dest='verbose', action='store_true',
                         help='verbose output')
+    parser.add_argument('--quiet', '-q', dest='quiet', action='store_true',
+                        help='quiet mode')
     parser.add_argument('--dry-run', dest='dryrun', action='store_true',
                         help='without save')
     parser.add_argument('--ignore-tags', dest='ignoretags',
@@ -82,10 +87,17 @@ def main():
             logger.info("Load box library: %s" % lib)
             proj.add_boxlib(boxlib.load(lib))
         logger.info("Replacing...")
-        proj.replace(strict=not args.ignoretags)
+        matched = proj.replace(strict=not args.ignoretags)
         if not args.dryrun:
-            logger.info("Saving...")
-            proj.save()
+            if matched:
+                logger.info("Saving...")
+                proj.save()
+                if not args.quiet:
+                    print('Replaced: %s (%d boxes)' % (project, matched))
+            else:
+                logger.info('Not matched')
+                if not args.quiet:
+                    print('Skipped: %s' % project)
 
 if __name__ == "__main__":
     main()
